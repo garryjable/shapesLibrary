@@ -1,0 +1,40 @@
+@startuml
+
+CompositeShape --* Shape
+Shape <|-- CompositeShape
+Shape <|-- Rectangle
+Shape <|-- Circle
+Shape <|-- Image
+Shape <|-- Line
+Shape <|-- Point
+
+
+class CompositeShape {
+    _components
+}
+
+class Rectangle {
+
+}
+
+class Rectangle {
+
+}
+
+class Circle {
+
+}
+
+class Image {
+
+}
+
+class Line {
+
+}
+
+class Point {
+
+}
+
+@enduml
