@@ -11,6 +11,11 @@ Shape <|-- Point
 
 class CompositeShape {
     _components
+    _tag
+}
+
+class Shape {
+    _item_id
 }
 
 class Rectangle {

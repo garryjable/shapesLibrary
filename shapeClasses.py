@@ -1,8 +1,10 @@
 import ABS
 
 class Shape(ABS):
+    item_id
+    tag
     components
-    
+
     @abstract_method
     def compute_area(self):
         area = 0
