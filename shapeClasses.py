@@ -1,29 +1,38 @@
-import ABS
+from abc import ABC, abstractmethod
+from tkinter import PhotoImage
 
-class Shape(ABS):
-    item_id
-    tag
-    components
 
-    @abstract_method
-    def compute_area(self):
-        area = 0
-        for component in self.components:
-            area += component.computeArea()
-        return area
+class Shape(ABC):
+    xCoord = 0
+    yCoord = 0
+    item_id = ''
+    measurements = {}
 
-        print("computing the area")
+    def __init__(self, *args, **kwargs):
+        self.xCoord = kwargs['xCoord']
+        self.yCoord = kwargs['yCoord']
+        self.measurements = kwargs['measurements']
 
-    @abstract_method
-    def move(self):
+    def get_coords(self):
+        return (self.xCoord, self.yCoord)
+
+    @abstractmethod
+    def compute_area(self, *args, **kwargs):
+        return
+
+    def move(self, *args, **kwargs):
+        self.xCoord = kwargs['newXCoord'] 
+        self.yCoord = kwargs['newYCoord'] 
         print("moving the shape")
 
-    @abstract_method
-    def scale(self):
-        print("scaling the shape")
+    def scale(self, *args, **kwargs):
+        new_measurements = self.measurements
+        for key, val in self.measurements.items():
+            new_measurements[key] = val * kwargs['factor']
+        self.measurements = new_measurements
 
-    @abstract_method
-    def get_drawable(self):
+    @abstractmethod
+    def get_drawable(self, *args, **kwargs):
         drawables = []
         for component in self.components:
             drawables.append(component.get_drawable())
@@ -31,9 +40,10 @@ class Shape(ABS):
 
 
 class CompositeShape(Shape):
-    components
-    
-    def compute_area(self):
+    components =[]
+    # item id is a tinkter tag
+
+    def compute_area(self, *args, **kwargs):
         area = 0
         for component in self.components:
             area += component.computeArea()
@@ -41,10 +51,10 @@ class CompositeShape(Shape):
 
         print("computing the area")
 
-    def move(self):
+    def move(self, *args, **kwargs):
         print("moving the shape")
 
-    def scale(self):
+    def scale(self, *args, **kwargs):
         print("scaling the shape")
 
     def get_drawable(self):
@@ -53,125 +63,79 @@ class CompositeShape(Shape):
             drawables.append(component.get_drawable())
         return drawables 
 
-#class Polygon(Shape):
-#    coordsList
-#    
-#    def compute_area(self):
-#        print("shitty linear algebra problem")
-#
-#    def scale(self):
-#        print("even shittier linear algebra problem")
-#
-#    def move(self):
-#        print("somewhat shitty linear algebra problem")
-#
-#    def get_drawable(self):
-#        print("return tkinter obj")
-
 
 class Rectangle(Shape): # tkinter polygon
-    coordsList
-    
-    def compute_area(self):
-        print("shitty linear algebra problem")
 
-    def scale(self):
-        print("even shittier linear algebra problem")
+    def compute_area(self, *args, **kwargs):
+        return self.measurements['width'] * self.measurements['length']
 
-    def move(self):
-        print("somewhat shitty linear algebra problem")
-
-    def get_drawable(self):
+    def get_drawable(self, *args, **kwargs):
         print("return tkinter obj")
 
+
 class Triangle(Shape): # tkinter polygon
-    coordsList
-    
-    def compute_area(self):
-        print("shitty linear algebra problem")
 
-    def scale(self):
-        print("even shittier linear algebra problem")
+    def compute_area(self, *args, **kwargs):
+        return (4.33) * ( self.measurements['side'] ** 2 )
 
-    def move(self):
-        print("somewhat shitty linear algebra problem")
-
-    def get_drawable(self):
+    def get_drawable(self, *args, **kwargs):
         print("return tkinter obj")
 
 
 class Circle(Shape): # tkinter oval
-    coordsList
 
-    def computeArea(self):
-        print("return area of oval")
 
-    def scale(self):
-        print("make the two coordinates of the bounding rectangle bigger")
+    def computeArea(self, *args, **kwargs):
+        self.measurements['radius'] *= kwargs['factor']
+        return 3.14 * self.measurements['radius'] ** 2
 
-    def move(self):
+    def move(self, *args, **kwargs):
         print("make the two coordinates of the bounding rectangle more different")
 
-    def get_drawable(self):
+    def get_drawable(self, *args, **kwargs):
         print("return tkinter obj")
 
 
-#class Arc(Shape):
-#
-#    def computeArea(self):
-#        print("no op unless it's a pieslice")
-#
-#    def scale(self):
-#        print("a yeah we big now")
-#
-#    def move(self):
-#        print("we moving now bois")
-#
-#    def get_drawable(self):
-#        print("return tkinter obj")
+class Image(Rectangle):
+    filename = ''
 
-
-class Image(Shape):
-
-    def scale(self):
-        print("wez a sqar")
-
-    def compute_area(self):
-        print("wez a sqar")
-
-    def move(self):
-        print("wez a sqar")
-
-    def get_drawable(self):
-        print("return tkinter obj")
+    def __init__(self, *args, **kwargs):
+        super(Image, self).__init__(*args, **kwargs)
+        self.filename = kwargs['filename']
 
 
 class Line(Shape):
+    xCoord2 = 0
+    yCoord2 = 0
 
-    def compute_area(self):
+    def __init__(self, *args, **kwargs):
+        super(Line, self).__init__(*args, **kwargs)
+        self.xCoord = kwargs['xCoord2']
+        self.yCoord = kwargs['yCoord2']
+
+    def compute_area(self, *args, **kwargs):
         return 0
 
-    def move(self):
-        print("translate me")
+    def move(self, *args, **kwargs):
+        super(Line, self).move(*args, **kwargs)
+        self.xCoord2 = kwargs['newXCoord2']
+        self.yCoord2 = kwargs['newYCoord2']
 
-    def scale(self):
-        print("enlengthenify the line")
+    def get_coords(self):
+        return [(self.xCoord, self.yCoord), (self.xCoord2, self.yCoord2)]
+
 
     def get_drawable(self):
         print("return tkinter obj")
+
 
 class Point(Shape): # tkinter oval with small radius
-    coords
 
-    def compute_area(self):
+    def compute_area(self, *args, **kwargs):
         return 0
 
-    def move(self):
-        print("literally a setter function for coords")
-
-    def scale(self):
+    def scale(self, *args, **kwargs):
         print("noop")
 
-    def get_drawable(self):
+    def get_drawable(self, *args, **kwargs):
         print("return tkinter obj")
-
