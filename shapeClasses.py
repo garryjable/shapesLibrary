@@ -85,12 +85,8 @@ class Triangle(Shape): # tkinter polygon
 class Circle(Shape): # tkinter oval
 
 
-    def computeArea(self, *args, **kwargs):
-        self.measurements['radius'] *= kwargs['factor']
+    def compute_area(self, *args, **kwargs):
         return 3.14 * self.measurements['radius'] ** 2
-
-    def move(self, *args, **kwargs):
-        print("make the two coordinates of the bounding rectangle more different")
 
     def get_drawable(self, *args, **kwargs):
         print("return tkinter obj")
