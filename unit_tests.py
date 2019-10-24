@@ -34,6 +34,7 @@ class CompositeShapeTests(unittest.TestCase, ShapeTests):
 
     def setUp(self):
         self.triangle_init_kwargs = {}
+        self.rectangle_init_kwargs = {}
         self.triangle_init_kwargs['xCoord'] = 50
         self.triangle_init_kwargs['yCoord'] = 50
         self.rectangle_init_kwargs['xCoord'] = 50
@@ -51,9 +52,9 @@ class CompositeShapeTests(unittest.TestCase, ShapeTests):
         self.length = 50
         self.width = 50
         self.tag = "test"
-        self.area = (4.33 * self.measurement ** 2) + (self.width * self.length)
-        triangle  = Triangle(xCoord=self.xCoord, yCoord=self.yCoord, side=self.side)
-        rectangle = Rectangle(xCoord=self.xCoord, yCoord=self.yCoord, width=self.width, height=self.height)
+        self.area = (4.33 * triangle_measurements['side'] ** 2) + (rectangle_measurements['width'] * rectangle_measurements['length'])
+        triangle  = Triangle(**self.triangle_init_kwargs)
+        rectangle = Rectangle(**self.rectangle_init_kwargs)
         self.components = [triangle, rectangle]
         self.shape = CompositeShape(tag=self.tag, components=self.components)
 
